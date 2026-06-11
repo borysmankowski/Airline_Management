@@ -24,5 +24,4 @@ public class Flight {
     @ManyToOne
     private Airport airportTo;
     private ZonedDateTime dateTime;
-
 }

@@ -1,4 +1,4 @@
-package org.example.airlinemanagement.flight;
+package org.example.airlinemanagement.application;
 
 import org.springframework.stereotype.Service;
 

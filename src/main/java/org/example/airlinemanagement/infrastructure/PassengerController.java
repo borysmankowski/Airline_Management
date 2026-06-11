@@ -1,4 +1,4 @@
-package org.example.airlinemanagement.passenger;
+package org.example.airlinemanagement.infrastructure;
 
 import org.springframework.stereotype.Controller;
 
