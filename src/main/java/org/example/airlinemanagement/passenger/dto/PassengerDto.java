@@ -13,6 +13,7 @@ import java.util.Date;
 @Setter
 public class PassengerDto {
 
+    private int id;
     private String name;
     private String surname;
     private String email;

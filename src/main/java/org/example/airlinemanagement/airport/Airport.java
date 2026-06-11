@@ -4,15 +4,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.example.airlinemanagement.airport.dto.CreateAirportCommand;
 
 @Entity
 @Getter
-@Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class Airport {
 
@@ -22,5 +18,22 @@ public class Airport {
     private String icaoCode;
     private String country;
     private String city;
+
+    private Airport (String icaoCode, String country, String city){
+        this.icaoCode = icaoCode;
+        this.country = country;
+        this.city = city;
+    }
+
+    public static Airport create(CreateAirportCommand createAirportCommand) {
+        if (createAirportCommand.getCountry() == null || createAirportCommand.getCountry().isBlank()) {
+            throw new IllegalArgumentException("Country cannot be blank");
+        }
+        if (createAirportCommand.getCity() == null || createAirportCommand.getCity().isBlank()) {
+            throw new IllegalArgumentException("City cannot be blank");
+        }
+        return new Airport(createAirportCommand.getIcaoCode(), createAirportCommand.getCountry(), createAirportCommand.getCity());
+    }
+
 
 }
