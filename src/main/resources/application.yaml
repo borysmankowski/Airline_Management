@@ -3,9 +3,9 @@ spring:
     name: Airline-management
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/mydb
-    username: user
-    password: user
+    url: jdbc:postgresql://localhost:5432/airline-management
+    username: admin
+    password: admin
     driver-class-name: org.postgresql.Driver
 
   jpa:

@@ -1,11 +1,10 @@
 package org.example.airlinemanagement.application;
 
 import lombok.AllArgsConstructor;
-import org.example.airlinemanagement.infrastructure.PassengerRepository;
-import org.example.airlinemanagement.passenger.Passenger;
-import org.example.airlinemanagement.passenger.dto.CreatePassengerCommand;
-import org.example.airlinemanagement.passenger.dto.PassengerDto;
-import org.example.airlinemanagement.passenger.dto.PassengerMapper;
+import org.example.airlinemanagement.application.commands.CreatePassengerCommand;
+import org.example.airlinemanagement.infrastructure.repository.PassengerRepository;
+import org.example.airlinemanagement.domain.Passenger;
+import org.example.airlinemanagement.infrastructure.mapper.PassengerMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,8 +16,8 @@ public class PassengerService {
     private final PassengerMapper passengerMapper;
 
     @Transactional
-    public PassengerDto createPassenger(CreatePassengerCommand createPassengerCommand) {
-        Passenger createdPassenger = passengerMapper.fromDto(createPassengerCommand);
-        return passengerMapper.toDto(passengerRepository.save(createdPassenger));
+    public Passenger createPassenger(CreatePassengerCommand createPassengerCommand) {
+        Passenger createdPassenger = passengerMapper.fromCommand(createPassengerCommand);
+        return passengerRepository.save(createdPassenger);
     }
 }

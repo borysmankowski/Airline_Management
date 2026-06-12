@@ -1,0 +1,28 @@
+package org.example.airlinemanagement.infrastructure.api;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.example.airlinemanagement.application.PassengerService;
+import org.example.airlinemanagement.infrastructure.mapper.PassengerMapper;
+import org.example.airlinemanagement.domain.Passenger;
+import org.example.airlinemanagement.application.commands.CreatePassengerCommand;
+import org.example.airlinemanagement.infrastructure.mapper.PassengerDto;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("api/passengers")
+public class PassengerController {
+
+    private final PassengerService passengerService;
+    private final PassengerMapper passengerMapper;
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<PassengerDto> createPassenger (@RequestBody @Valid CreatePassengerCommand createPassengerCommand){
+        Passenger createdPassenger = passengerService.createPassenger(createPassengerCommand);
+        return ResponseEntity.status(HttpStatus.CREATED).body(passengerMapper.toDto(createdPassenger));
+    }
+}
