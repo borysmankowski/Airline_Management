@@ -16,6 +16,7 @@ public class FlightService {
     private final FlightRepository flightRepository;
     private final FlightMapper flightMapper;
 
+    // TODO: 08/07/2026 zmienic jak w airport service
     @Transactional
     public FlightDto createFlight (CreateFlightCommand createFlightCommand){
         Flight flight = flightMapper.fromDto(createFlightCommand);
