@@ -24,5 +24,6 @@ public class FlightMapper {
                 .airportTo(createFlightCommand.getAirportTo())
                 .dateTime(createFlightCommand.getDateTime())
                 .build();
+        // TODO: 08/07/2026 powinna byc metoda jak w airport
     }
 }

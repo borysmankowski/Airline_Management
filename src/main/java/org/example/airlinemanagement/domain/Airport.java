@@ -25,6 +25,8 @@ public class Airport {
         this.city = city;
     }
 
+    // TODO: 08/07/2026 wyrzucic createcommand z create i dodawac zwykle pola odrazu
+
     public static Airport create(CreateAirportCommand createAirportCommand) {
         return new Airport(createAirportCommand.getIcaoCode(), createAirportCommand.getCountry(), createAirportCommand.getCity());
     }
