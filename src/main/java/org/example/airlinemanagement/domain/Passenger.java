@@ -1,19 +1,13 @@
 package org.example.airlinemanagement.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.*;
 import lombok.*;
 import org.example.airlinemanagement.application.commands.CreatePassengerCommand;
-import org.example.airlinemanagement.domain.Booking;
+import org.example.airlinemanagement.infrastructure.exception.InvalidPassengerException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -26,8 +20,10 @@ public class Passenger {
     private int id;
     private String name;
     private String surname;
+    @Column(unique = true)
     private String email;
     private LocalDate birthDate;
+    @Getter
     @OneToMany(mappedBy = "passenger")
     private List<Booking> bookings;
 
@@ -41,16 +37,16 @@ public class Passenger {
 
     public static Passenger create(CreatePassengerCommand createPassengerCommand){
         if (createPassengerCommand.getName() == null || createPassengerCommand.getName().isBlank()){
-            throw new IllegalArgumentException("Name cannot be blank!");
+            throw new InvalidPassengerException("Name cannot be blank!");
         }
         if (createPassengerCommand.getSurname() == null || createPassengerCommand.getSurname().isBlank()){
-            throw new IllegalArgumentException("Surname cannot be blank!");
+            throw new InvalidPassengerException("Surname cannot be blank!");
         }
         if (createPassengerCommand.getEmail() == null || createPassengerCommand.getEmail().isBlank()){
-            throw new IllegalArgumentException("Email cannot be blank!");
+            throw new InvalidPassengerException("Email cannot be blank!");
         }
         if (createPassengerCommand.getBirthDate() == null || createPassengerCommand.getBirthDate().isAfter(LocalDate.now())){
-            throw new IllegalArgumentException("Date of birth cannot be blank!");
+            throw new InvalidPassengerException("Date of birth cannot be blank!");
         }
 
         return new Passenger(createPassengerCommand.getName(),
@@ -58,4 +54,5 @@ public class Passenger {
                 createPassengerCommand.getEmail(),
                 createPassengerCommand.getBirthDate());
     }
+
 }
