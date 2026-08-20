@@ -17,12 +17,11 @@ import org.springframework.web.bind.annotation.*;
 public class PassengerController {
 
     private final PassengerService passengerService;
-    private final PassengerMapper passengerMapper;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<PassengerDto> createPassenger (@RequestBody @Valid CreatePassengerCommand createPassengerCommand){
-        Passenger createdPassenger = passengerService.createPassenger(createPassengerCommand);
-        return ResponseEntity.status(HttpStatus.CREATED).body(passengerMapper.toDto(createdPassenger));
+        PassengerDto createdPassenger = passengerService.createPassenger(createPassengerCommand);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdPassenger);
     }
 }

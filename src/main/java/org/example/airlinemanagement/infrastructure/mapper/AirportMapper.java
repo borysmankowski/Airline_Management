@@ -7,6 +7,6 @@ import org.springframework.stereotype.Component;
 public class AirportMapper {
 
     public AirportDto toDto(Airport airport) {
-        return new AirportDto(airport.getIcaoCode(), airport.getCountry(), airport.getCity());
+        return new AirportDto(airport.getId(), airport.getIcaoCode(), airport.getCountry(), airport.getCity());
     }
 }

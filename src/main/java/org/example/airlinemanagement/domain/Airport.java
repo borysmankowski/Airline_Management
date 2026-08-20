@@ -34,6 +34,4 @@ public class Airport {
         }
         return new Airport(createAirportCommand.getIcaoCode(), createAirportCommand.getCountry(), createAirportCommand.getCity());
     }
-
-
 }
