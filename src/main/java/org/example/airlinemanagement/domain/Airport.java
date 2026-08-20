@@ -25,13 +25,9 @@ public class Airport {
         this.city = city;
     }
 
+    // TODO: 08/07/2026 wyrzucic createcommand z create i dodawac zwykle pola odrazu
+
     public static Airport create(CreateAirportCommand createAirportCommand) {
-        if (createAirportCommand.getCountry() == null || createAirportCommand.getCountry().isBlank()) {
-            throw new IllegalArgumentException("Country cannot be blank");
-        }
-        if (createAirportCommand.getCity() == null || createAirportCommand.getCity().isBlank()) {
-            throw new IllegalArgumentException("City cannot be blank");
-        }
         return new Airport(createAirportCommand.getIcaoCode(), createAirportCommand.getCountry(), createAirportCommand.getCity());
     }
 }
