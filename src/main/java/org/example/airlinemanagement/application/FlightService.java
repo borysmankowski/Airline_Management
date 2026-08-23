@@ -2,9 +2,11 @@ package org.example.airlinemanagement.application;
 
 import lombok.RequiredArgsConstructor;
 import org.example.airlinemanagement.application.commands.CreateFlightCommand;
+import org.example.airlinemanagement.domain.Airport;
 import org.example.airlinemanagement.domain.Flight;
 import org.example.airlinemanagement.infrastructure.mapper.FlightDto;
 import org.example.airlinemanagement.infrastructure.mapper.FlightMapper;
+import org.example.airlinemanagement.infrastructure.repository.AirportRepository;
 import org.example.airlinemanagement.infrastructure.repository.FlightRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,11 +17,13 @@ public class FlightService {
 
     private final FlightRepository flightRepository;
     private final FlightMapper flightMapper;
+    private final AirportRepository airportRepository;
 
-    // TODO: 08/07/2026 zmienic jak w airport service
     @Transactional
-    public FlightDto createFlight (CreateFlightCommand createFlightCommand){
-        Flight flight = flightMapper.fromDto(createFlightCommand);
+    public FlightDto createFlight(CreateFlightCommand createFlightCommand) {
+        Airport airportFrom = airportRepository.findById(createFlightCommand.getAirportFromId()).orElseThrow();
+        Airport airportTo = airportRepository.findById(createFlightCommand.getAirportToId()).orElseThrow();
+        Flight flight = Flight.create(createFlightCommand.getFlightNo(), airportFrom, airportTo, createFlightCommand.getDateTime());
         return flightMapper.toDto(flightRepository.save(flight));
     }
 }

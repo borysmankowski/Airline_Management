@@ -4,16 +4,13 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.airlinemanagement.application.commands.CreateFlightCommand;
 
 import java.time.ZonedDateTime;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Flight {
@@ -29,5 +26,18 @@ public class Flight {
     @JoinColumn(name = "arrival_id")
     private Airport airportTo;
     private ZonedDateTime dateTime;
+
+    private Flight(String flightNo, Airport airportFrom, Airport airportTo, ZonedDateTime dateTime) {
+        this.flightNo = flightNo;
+        this.airportFrom = airportFrom;
+        this.airportTo = airportTo;
+        this.dateTime = dateTime;
+    }
+
+
+    public static Flight create (String flightNo, Airport airportFrom, Airport airportTo, ZonedDateTime zonedDateTime){
+        return new Flight(flightNo,airportFrom,airportTo,zonedDateTime);
+    }
+
 
 }
