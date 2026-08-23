@@ -1,12 +1,9 @@
 package org.example.airlinemanagement.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.example.airlinemanagement.application.commands.CreateBookingCommand;
-
+import org.springframework.transaction.annotation.Transactional;
 
 @Entity
 @Getter
@@ -16,24 +13,26 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+
     @ManyToOne
     @JoinColumn(name = "flight_id")
     private Flight flight;
+
     @ManyToOne
     @JoinColumn(name = "airport_id")
     private Airport airport;
+
     @ManyToOne
     @JoinColumn(name = "passenger_id")
     private Passenger passenger;
 
-    public Booking(Flight flight, Airport airport, Passenger passenger) {
+    private Booking(Flight flight, Airport airport, Passenger passenger) {
         this.flight = flight;
         this.airport = airport;
         this.passenger = passenger;
     }
 
-    public static create (CreateBookingCommand createBookingCommand){
-        return new Booking(createBookingCommand)
+    public static Booking create(Flight flight, Airport airport, Passenger passenger) {
+        return new Booking(flight, airport, passenger);
     }
-
 }

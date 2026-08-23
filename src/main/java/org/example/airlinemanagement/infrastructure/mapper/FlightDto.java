@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.airlinemanagement.domain.Airport;
+
 import java.time.ZonedDateTime;
 
 @Getter
@@ -17,7 +17,7 @@ public class FlightDto {
 
     private int id;
     private String flightNo;
-    private Airport airportFrom;
-    private Airport airportTo;
+    private int airportFromId;
+    private int airportToId;
     private ZonedDateTime dateTime;
 }

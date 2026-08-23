@@ -1,6 +1,5 @@
 package org.example.airlinemanagement.domain;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.airlinemanagement.application.commands.CreatePassengerCommand;
