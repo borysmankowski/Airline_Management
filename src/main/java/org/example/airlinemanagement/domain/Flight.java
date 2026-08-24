@@ -1,18 +1,14 @@
 package org.example.airlinemanagement.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import java.time.ZonedDateTime;
 
 @Entity
 @Getter
-@Setter
-@AllArgsConstructor
-@Builder
+@NoArgsConstructor
 public class Flight {
 
     @Id
@@ -38,6 +34,4 @@ public class Flight {
     public static Flight create (String flightNo, Airport airportFrom, Airport airportTo, ZonedDateTime zonedDateTime){
         return new Flight(flightNo,airportFrom,airportTo,zonedDateTime);
     }
-
-
 }
