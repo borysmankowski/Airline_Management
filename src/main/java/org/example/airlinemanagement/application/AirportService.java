@@ -11,6 +11,8 @@ import org.example.airlinemanagement.shared.IcaoCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class AirportService {
@@ -29,6 +31,13 @@ public class AirportService {
         Airport airport = Airport.register(code, createAirportCommand.getCountry(), createAirportCommand.getCity());
         return airportMapper.toDto(airportRepository.save(airport));
     }
+
+    @Transactional(readOnly = true)
+    public List<AirportDto> getAllAirports() {
+        return airportRepository.findAll()
+                .stream()
+                .map(airportMapper::toDto)
+                .toList();
+    }
 }
 
-// TODO: 08/07/2026 create / search / delete / security

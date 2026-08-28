@@ -1,13 +1,20 @@
 package org.example.airlinemanagement.domain;
 
-import jakarta.persistence.*;
-import lombok.*;
-import org.example.airlinemanagement.application.commands.CreateAirportCommand;
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.example.airlinemanagement.shared.IcaoCode;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Airport {
 
     @Id
