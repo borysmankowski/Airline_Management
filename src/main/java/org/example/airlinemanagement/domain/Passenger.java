@@ -1,7 +1,13 @@
 package org.example.airlinemanagement.domain;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.example.airlinemanagement.application.commands.CreatePassengerCommand;
 import org.example.airlinemanagement.infrastructure.exception.InvalidPassengerException;
 
@@ -34,17 +40,17 @@ public class Passenger {
         this.bookings = new ArrayList<>();
     }
 
-    public static Passenger create(CreatePassengerCommand createPassengerCommand){
-        if (createPassengerCommand.getName() == null || createPassengerCommand.getName().isBlank()){
+    public static Passenger create(CreatePassengerCommand createPassengerCommand) {
+        if (createPassengerCommand.getName() == null || createPassengerCommand.getName().isBlank()) {
             throw new InvalidPassengerException("Name cannot be blank!");
         }
-        if (createPassengerCommand.getSurname() == null || createPassengerCommand.getSurname().isBlank()){
+        if (createPassengerCommand.getSurname() == null || createPassengerCommand.getSurname().isBlank()) {
             throw new InvalidPassengerException("Surname cannot be blank!");
         }
-        if (createPassengerCommand.getEmail() == null || createPassengerCommand.getEmail().isBlank()){
+        if (createPassengerCommand.getEmail() == null || createPassengerCommand.getEmail().isBlank()) {
             throw new InvalidPassengerException("Email cannot be blank!");
         }
-        if (createPassengerCommand.getBirthDate() == null || createPassengerCommand.getBirthDate().isAfter(LocalDate.now())){
+        if (createPassengerCommand.getBirthDate() == null || createPassengerCommand.getBirthDate().isAfter(LocalDate.now())) {
             throw new InvalidPassengerException("Date of birth cannot be blank!");
         }
 

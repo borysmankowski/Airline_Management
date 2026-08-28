@@ -1,6 +1,5 @@
 package org.example.airlinemanagement.infrastructure.mapper;
 
-import org.example.airlinemanagement.application.commands.CreatePassengerCommand;
 import org.example.airlinemanagement.domain.Passenger;
 import org.springframework.stereotype.Component;
 
