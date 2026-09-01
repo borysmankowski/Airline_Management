@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.example.airlinemanagement.application.commands.CreateBookingCommand;
 import org.example.airlinemanagement.domain.Airport;
 import org.example.airlinemanagement.domain.Booking;
+import org.example.airlinemanagement.domain.BookingStatus;
 import org.example.airlinemanagement.domain.Flight;
 import org.example.airlinemanagement.domain.Passenger;
 import org.example.airlinemanagement.infrastructure.mapper.BookingDto;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -38,7 +38,7 @@ public class BookingService {
         Passenger passenger = passengerRepository.findById(createBookingCommand.getPassengerId())
                 .orElseThrow(() -> new EntityNotFoundException("Passenger " + createBookingCommand.getPassengerId()));
 
-        return bookingMapper.toDto(bookingRepository.save(Booking.create(flight, airport, passenger)));
+        return bookingMapper.toDto(bookingRepository.save(Booking.create(flight, airport, passenger, BookingStatus.IN_PROGRESS)));
     }
 
     @Transactional(readOnly = true)

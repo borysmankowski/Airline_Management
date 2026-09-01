@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.example.airlinemanagement.application.commands.CreateFlightCommand;
 import org.example.airlinemanagement.domain.Airport;
 import org.example.airlinemanagement.domain.Flight;
-import org.example.airlinemanagement.infrastructure.mapper.BookingDto;
 import org.example.airlinemanagement.infrastructure.mapper.FlightDto;
 import org.example.airlinemanagement.infrastructure.mapper.FlightMapper;
 import org.example.airlinemanagement.infrastructure.repository.AirportRepository;
@@ -37,4 +36,13 @@ public class FlightService {
                 .map(flightMapper::toDto)
                 .toList();
     }
+
+    @Transactional(readOnly = true)
+    public List<FlightDto> getFlightsForPerticularAirportAndDates(){
+        return flightRepository.findByAirportFromAndAirportToAndDateTimeBetween()
+                .stream()
+                .map(flightMapper::toDto)
+                .toList();
+    }
+
 }

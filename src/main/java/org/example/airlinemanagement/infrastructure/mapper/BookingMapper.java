@@ -11,7 +11,8 @@ public class BookingMapper {
                 booking.getId(),
                 booking.getFlight().getId(),
                 booking.getAirport().getId(),
-                booking.getPassenger().getId()
+                booking.getPassenger().getId(),
+                booking.getBookingStatus().toString()
         );
     }
 }

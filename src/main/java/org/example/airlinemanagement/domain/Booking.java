@@ -1,6 +1,8 @@
 package org.example.airlinemanagement.domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,13 +32,17 @@ public class Booking {
     @JoinColumn(name = "passenger_id")
     private Passenger passenger;
 
-    private Booking(Flight flight, Airport airport, Passenger passenger) {
+    @Enumerated(EnumType.STRING)
+    private BookingStatus bookingStatus;
+
+    private Booking(Flight flight, Airport airport, Passenger passenger, BookingStatus bookingStatus) {
         this.flight = flight;
         this.airport = airport;
         this.passenger = passenger;
+        this.bookingStatus = bookingStatus;
     }
 
-    public static Booking create(Flight flight, Airport airport, Passenger passenger) {
-        return new Booking(flight, airport, passenger);
+    public static Booking create(Flight flight, Airport airport, Passenger passenger, BookingStatus bookingStatus) {
+        return new Booking(flight, airport, passenger, bookingStatus);
     }
 }
