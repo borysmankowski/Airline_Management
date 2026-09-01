@@ -4,14 +4,18 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.airlinemanagement.application.PassengerService;
 import org.example.airlinemanagement.application.commands.CreatePassengerCommand;
+import org.example.airlinemanagement.infrastructure.mapper.FlightDto;
 import org.example.airlinemanagement.infrastructure.mapper.PassengerDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,5 +29,11 @@ public class PassengerController {
     public ResponseEntity<PassengerDto> createPassenger(@RequestBody @Valid CreatePassengerCommand createPassengerCommand) {
         PassengerDto createdPassenger = passengerService.createPassenger(createPassengerCommand);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPassenger);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.FOUND)
+    public ResponseEntity<List<PassengerDto>> getAllPassengers() {
+        return ResponseEntity.status(HttpStatus.CREATED).body(passengerService.getAllPassengers());
     }
 }

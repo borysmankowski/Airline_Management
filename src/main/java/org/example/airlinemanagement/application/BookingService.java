@@ -16,6 +16,9 @@ import org.example.airlinemanagement.infrastructure.repository.PassengerReposito
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class BookingService {
@@ -24,7 +27,7 @@ public class BookingService {
     private final AirportRepository airportRepository;
     private final PassengerRepository passengerRepository;
     private final BookingRepository bookingRepository;
-    private final BookingMapper mapper;
+    private final BookingMapper bookingMapper;
 
     @Transactional
     public BookingDto createBooking(CreateBookingCommand createBookingCommand) {
@@ -35,6 +38,14 @@ public class BookingService {
         Passenger passenger = passengerRepository.findById(createBookingCommand.getPassengerId())
                 .orElseThrow(() -> new EntityNotFoundException("Passenger " + createBookingCommand.getPassengerId()));
 
-        return mapper.toDto(bookingRepository.save(Booking.create(flight, airport, passenger)));
+        return bookingMapper.toDto(bookingRepository.save(Booking.create(flight, airport, passenger)));
+    }
+
+    @Transactional(readOnly = true)
+    public List<BookingDto> getAllBookings(){
+     return bookingRepository.findAll()
+             .stream()
+             .map(bookingMapper::toDto)
+             .toList();
     }
 }

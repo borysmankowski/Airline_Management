@@ -31,7 +31,8 @@ public class AirportController {
     }
 
     @GetMapping
-    public List<AirportDto> getAllAirports() {
-        return airportService.getAllAirports();
+    @ResponseStatus(HttpStatus.FOUND)
+    public ResponseEntity<List<AirportDto>> getAllAirports() {
+        return ResponseEntity.status(HttpStatus.CREATED).body(airportService.getAllAirports());
     }
 }
