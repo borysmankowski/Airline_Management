@@ -2,6 +2,7 @@ package org.example.airlinemanagement.infrastructure.api;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.example.airlinemanagement.application.FlightService;
 import org.example.airlinemanagement.application.commands.CreateFlightCommand;
 import org.example.airlinemanagement.infrastructure.mapper.BookingDto;
@@ -35,5 +36,12 @@ public class FlightController {
     @ResponseStatus(HttpStatus.FOUND)
     public ResponseEntity<List<FlightDto>> getAllFlights() {
         return ResponseEntity.status(HttpStatus.CREATED).body(flightService.getAllFlights());
+
+
+    }
+    @GetMapping
+    @ResponseStatus(HttpStatus.FOUND)
+    public ResponseEntity<List<FlightDto>> getFlightsForPerticularAirportAndDates() {
+        return ResponseEntity.status(HttpStatus.CREATED).body(flightService.getFlightsForPerticularAirportAndDates());
     }
 }

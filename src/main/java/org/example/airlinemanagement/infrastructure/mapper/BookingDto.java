@@ -15,4 +15,5 @@ public class BookingDto {
     private int flightId;
     private int airportId;
     private int passengerId;
+    private String bookingStatus;
 }
