@@ -11,6 +11,7 @@ import org.example.airlinemanagement.infrastructure.repository.FlightRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Service
@@ -30,7 +31,7 @@ public class FlightService {
     }
 
     @Transactional(readOnly = true)
-    public List<FlightDto> getAllFlights(){
+    public List<FlightDto> getAllFlights() {
         return flightRepository.findAll()
                 .stream()
                 .map(flightMapper::toDto)
@@ -38,11 +39,17 @@ public class FlightService {
     }
 
     @Transactional(readOnly = true)
-    public List<FlightDto> getFlightsForPerticularAirportAndDates(){
-        return flightRepository.findByAirportFromAndAirportToAndDateTimeBetween()
-                .stream()
-                .map(flightMapper::toDto)
-                .toList();
-    }
+    public List<FlightDto> getFlightsForPerticularAirportAndDates(
+            int airportFromId, int airportToId, ZonedDateTime fromDate, ZonedDateTime toDate) {
 
+        Airport airportFrom = airportRepository.findById(airportFromId).orElseThrow();
+        Airport airportTo = airportRepository.findById(airportToId).orElseThrow();
+
+        {
+            return flightRepository.findByAirportFromAndAirportToAndDateTimeBetween(airportFrom, airportTo, fromDate, toDate)
+                    .stream()
+                    .map(flightMapper::toDto)
+                    .toList();
+        }
+    }
 }
