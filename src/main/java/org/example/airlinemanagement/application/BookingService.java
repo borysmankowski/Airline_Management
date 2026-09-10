@@ -3,11 +3,7 @@ package org.example.airlinemanagement.application;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.example.airlinemanagement.application.commands.CreateBookingCommand;
-import org.example.airlinemanagement.domain.Airport;
-import org.example.airlinemanagement.domain.Booking;
-import org.example.airlinemanagement.domain.BookingStatus;
-import org.example.airlinemanagement.domain.Flight;
-import org.example.airlinemanagement.domain.Passenger;
+import org.example.airlinemanagement.domain.*;
 import org.example.airlinemanagement.infrastructure.mapper.BookingDto;
 import org.example.airlinemanagement.infrastructure.mapper.BookingMapper;
 import org.example.airlinemanagement.infrastructure.repository.AirportRepository;
@@ -42,10 +38,10 @@ public class BookingService {
     }
 
     @Transactional(readOnly = true)
-    public List<BookingDto> getAllBookings(){
-     return bookingRepository.findAll()
-             .stream()
-             .map(bookingMapper::toDto)
-             .toList();
+    public List<BookingDto> getAllBookings() {
+        return bookingRepository.findAll()
+                .stream()
+                .map(bookingMapper::toDto)
+                .toList();
     }
 }

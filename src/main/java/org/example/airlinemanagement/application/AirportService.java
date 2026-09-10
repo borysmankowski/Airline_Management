@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.example.airlinemanagement.application.commands.CreateAirportCommand;
 import org.example.airlinemanagement.domain.Airport;
+import org.example.airlinemanagement.domain.ValidationException;
 import org.example.airlinemanagement.infrastructure.mapper.AirportDto;
 import org.example.airlinemanagement.infrastructure.mapper.AirportMapper;
 import org.example.airlinemanagement.infrastructure.repository.AirportRepository;
@@ -25,7 +26,7 @@ public class AirportService {
         IcaoCode code = new IcaoCode(createAirportCommand.getIcaoCode());
 
         if (airportRepository.existsByIcaoCode(code)) {
-            throw new EntityNotFoundException(String.valueOf(code));
+            throw new ValidationException("Airport with ICAO code %s already exists".formatted(code));
         }
 
         Airport airport = Airport.register(code, createAirportCommand.getCountry(), createAirportCommand.getCity());
