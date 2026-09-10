@@ -2,10 +2,8 @@ package org.example.airlinemanagement.infrastructure.api;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.example.airlinemanagement.application.FlightService;
 import org.example.airlinemanagement.application.commands.CreateFlightCommand;
-import org.example.airlinemanagement.infrastructure.mapper.BookingDto;
 import org.example.airlinemanagement.infrastructure.mapper.FlightDto;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -36,6 +34,7 @@ public class FlightController {
 
 
     }
+
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.FOUND)
     public ResponseEntity<List<FlightDto>> getFlightsForPerticularAirportAndDates(
@@ -47,7 +46,7 @@ public class FlightController {
             return ResponseEntity.status(HttpStatus.CREATED).body(flightService.getFlightsForPerticularAirportAndDates(airportFromId,
                     airportToId,
                     fromDate
-            ,toDate));
+                    , toDate));
         }
     }
 }

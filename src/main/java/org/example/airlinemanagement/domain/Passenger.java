@@ -1,15 +1,9 @@
 package org.example.airlinemanagement.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.airlinemanagement.application.commands.CreatePassengerCommand;
-import org.example.airlinemanagement.infrastructure.exception.InvalidPassengerException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -42,16 +36,16 @@ public class Passenger {
 
     public static Passenger create(CreatePassengerCommand createPassengerCommand) {
         if (createPassengerCommand.getName() == null || createPassengerCommand.getName().isBlank()) {
-            throw new InvalidPassengerException("Name cannot be blank!");
+            throw new ValidationException("Name cannot be blank!");
         }
         if (createPassengerCommand.getSurname() == null || createPassengerCommand.getSurname().isBlank()) {
-            throw new InvalidPassengerException("Surname cannot be blank!");
+            throw new ValidationException("Surname cannot be blank!");
         }
         if (createPassengerCommand.getEmail() == null || createPassengerCommand.getEmail().isBlank()) {
-            throw new InvalidPassengerException("Email cannot be blank!");
+            throw new ValidationException("Email cannot be blank!");
         }
         if (createPassengerCommand.getBirthDate() == null || createPassengerCommand.getBirthDate().isAfter(LocalDate.now())) {
-            throw new InvalidPassengerException("Date of birth cannot be blank!");
+            throw new ValidationException("Date of birth cannot be blank!");
         }
 
         return new Passenger(createPassengerCommand.getName(),
@@ -59,5 +53,4 @@ public class Passenger {
                 createPassengerCommand.getEmail(),
                 createPassengerCommand.getBirthDate());
     }
-
 }
