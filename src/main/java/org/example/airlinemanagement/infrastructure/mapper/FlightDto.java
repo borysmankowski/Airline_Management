@@ -4,16 +4,5 @@ import lombok.*;
 
 import java.time.ZonedDateTime;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class FlightDto {
-
-    private int id;
-    private String flightNo;
-    private int airportFromId;
-    private int airportToId;
-    private ZonedDateTime dateTime;
+public record FlightDto(int id, String flightNo, int airportFromId, int airportToId, ZonedDateTime dateTime) {
 }
