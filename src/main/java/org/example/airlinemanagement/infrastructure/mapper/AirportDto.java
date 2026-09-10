@@ -5,15 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class AirportDto {
-
-    private int id;
-    private String icaoCode;
-    private String country;
-    private String city;
+public record AirportDto(int id, String icaoCode, String country, String city) {
 }
 

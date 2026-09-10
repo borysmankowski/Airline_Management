@@ -7,12 +7,12 @@ import org.springframework.stereotype.Component;
 public class FlightMapper {
 
     public FlightDto toDto(Flight flight) {
-        return FlightDto.builder()
-                .id(flight.getId())
-                .flightNo(flight.getFlightNo())
-                .airportFromId(flight.getAirportFrom().getId())
-                .airportToId(flight.getAirportTo().getId())
-                .dateTime(flight.getDateTime())
-                .build();
+        return new FlightDto(
+                flight.getId(),
+                flight.getFlightNo(),
+                flight.getAirportFrom().getId(),
+                flight.getAirportTo().getId(),
+                flight.getDateTime()
+        );
     }
 }
