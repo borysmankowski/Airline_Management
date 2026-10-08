@@ -9,16 +9,16 @@
 
 <form id="register-form">
     <label>Imię:</label>
-    <input type="text" name="name" required maxlength="100"><br><br>
+    <input maxlength="100" name="name" required type="text"><br><br>
 
     <label>Nazwisko:</label>
-    <input type="text" name="surname" required maxlength="100"><br><br>
+    <input maxlength="100" name="surname" required type="text"><br><br>
 
     <label>E-mail:</label>
-    <input type="email" name="email" required maxlength="255"><br><br>
+    <input maxlength="255" name="email" required type="email"><br><br>
 
     <label>Hasło:</label>
-    <input type="password" name="password" required minlength="8" maxlength="72"><br>
+    <input maxlength="72" minlength="8" name="password" required type="password"><br>
     <small>8-72 znaki, mała i duża litera oraz cyfra</small><br><br>
 
     <button type="submit">Zarejestruj</button>
@@ -54,7 +54,8 @@
             try {
                 const error = await response.json();
                 if (error.message) text += ': ' + error.message;
-            } catch (e) { /* odpowiedź bez treści */ }
+            } catch (e) { /* odpowiedź bez treści */
+            }
             message.textContent = text;
         }
     });

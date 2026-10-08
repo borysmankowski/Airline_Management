@@ -1,3 +1,3 @@
 package org.example.airlinemanagement.domain;
 
-public enum Role { ADMIN, NORMAL }
+public enum Role {ADMIN, NORMAL}

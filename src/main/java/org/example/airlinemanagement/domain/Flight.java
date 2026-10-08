@@ -65,6 +65,15 @@ public class Flight {
         return new Flight(flightNo.trim(), from, to, departure, arrival, totalSeats, price);
     }
 
+    private static void validate(String flightNo, Airport from, Airport to, ZonedDateTime departure,
+                                 ZonedDateTime arrival, int totalSeats) {
+        if (flightNo == null || flightNo.isBlank()) throw new ValidationException("Flight number is required");
+        if (from.getIcaoCode().equals(to.getIcaoCode()))
+            throw new ValidationException("Departure and arrival airports must differ");
+        if (!arrival.isAfter(departure)) throw new ValidationException("Arrival must be after departure");
+        if (totalSeats < 1) throw new ValidationException("Flight must have at least 1 seat");
+    }
+
     public void update(String flightNo, Airport from, Airport to, ZonedDateTime departure,
                        ZonedDateTime arrival, int totalSeats, Money price) {
         validate(flightNo, from, to, departure, arrival, totalSeats);
@@ -99,14 +108,5 @@ public class Flight {
 
     public boolean hasDeparted(ZonedDateTime now) {
         return !departureTime.isAfter(now);
-    }
-
-    private static void validate(String flightNo, Airport from, Airport to, ZonedDateTime departure,
-                                 ZonedDateTime arrival, int totalSeats) {
-        if (flightNo == null || flightNo.isBlank()) throw new ValidationException("Flight number is required");
-        if (from.getIcaoCode().equals(to.getIcaoCode()))
-            throw new ValidationException("Departure and arrival airports must differ");
-        if (!arrival.isAfter(departure)) throw new ValidationException("Arrival must be after departure");
-        if (totalSeats < 1) throw new ValidationException("Flight must have at least 1 seat");
     }
 }
