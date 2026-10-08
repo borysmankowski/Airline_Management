@@ -40,6 +40,7 @@ public class FlightService {
                 new Money(createFlightCommand.getPrice()));
         return flightMapper.toDto(flightRepository.save(flight));
     }
+
     @Transactional(readOnly = true)
     public List<FlightDto> getAllFlights() {
         return flightRepository.findAll()

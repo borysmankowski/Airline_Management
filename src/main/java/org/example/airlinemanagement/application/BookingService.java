@@ -7,15 +7,16 @@ import org.example.airlinemanagement.application.commands.create.CreatePassenger
 import org.example.airlinemanagement.domain.*;
 import org.example.airlinemanagement.infrastructure.mapper.BookingDto;
 import org.example.airlinemanagement.infrastructure.mapper.BookingMapper;
-import org.example.airlinemanagement.infrastructure.repository.*;
-import org.example.airlinemanagement.security.Caller;
+import org.example.airlinemanagement.infrastructure.repository.BookingRepository;
+import org.example.airlinemanagement.infrastructure.repository.FlightRepository;
+import org.example.airlinemanagement.infrastructure.repository.PassengerRepository;
+import org.example.airlinemanagement.infrastructure.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.ZonedDateTime;
-import java.util.HashSet;
 import java.util.List;
 
 @Service
