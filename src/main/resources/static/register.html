@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Rejestracja</title>
+</head>
+<body>
+<h1>Rejestracja</h1>
+
+<form id="register-form">
+    <label>Imię:</label>
+    <input type="text" name="name" required maxlength="100"><br><br>
+
+    <label>Nazwisko:</label>
+    <input type="text" name="surname" required maxlength="100"><br><br>
+
+    <label>E-mail:</label>
+    <input type="email" name="email" required maxlength="255"><br><br>
+
+    <label>Hasło:</label>
+    <input type="password" name="password" required minlength="8" maxlength="72"><br>
+    <small>8-72 znaki, mała i duża litera oraz cyfra</small><br><br>
+
+    <button type="submit">Zarejestruj</button>
+</form>
+
+<p id="message"></p>
+
+<script>
+    document.getElementById('register-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const form = event.target;
+        const message = document.getElementById('message');
+
+        const body = {
+            name: form.name.value,
+            surname: form.surname.value,
+            email: form.email.value,
+            password: form.password.value
+        };
+
+        const response = await fetch('/api/users', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(body)
+        });
+
+        if (response.status === 201) {
+            const user = await response.json();
+            message.textContent = 'Konto utworzone: ' + user.email + ' (rola ' + user.role + ')';
+            form.reset();
+        } else {
+            let text = 'Błąd ' + response.status;
+            try {
+                const error = await response.json();
+                if (error.message) text += ': ' + error.message;
+            } catch (e) { /* odpowiedź bez treści */ }
+            message.textContent = text;
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,8 +1,7 @@
 package org.example.airlinemanagement.application;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.example.airlinemanagement.application.commands.CreateAirportCommand;
+import org.example.airlinemanagement.application.commands.create.CreateAirportCommand;
 import org.example.airlinemanagement.domain.Airport;
 import org.example.airlinemanagement.domain.ValidationException;
 import org.example.airlinemanagement.infrastructure.mapper.AirportDto;

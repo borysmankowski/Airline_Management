@@ -1,10 +1,11 @@
 package org.example.airlinemanagement.infrastructure.mapper;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.time.ZonedDateTime;
+import java.util.List;
 
-public record BookingDto(int id, int flightId, int airportId, int passengerId, String bookingStatus) {
+public record BookingDto(int id, int flightId, String flightNo, String bookingStatus,
+                         ZonedDateTime createdAt, ZonedDateTime expiresAt,
+                         BigDecimal totalPrice, List<PassengerDto> passengers) {
 }

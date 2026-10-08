@@ -1,13 +1,15 @@
 package org.example.airlinemanagement.application;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.example.airlinemanagement.application.commands.CreateFlightCommand;
+import org.example.airlinemanagement.application.commands.create.CreateFlightCommand;
 import org.example.airlinemanagement.domain.Airport;
 import org.example.airlinemanagement.domain.Flight;
 import org.example.airlinemanagement.infrastructure.mapper.FlightDto;
 import org.example.airlinemanagement.infrastructure.mapper.FlightMapper;
 import org.example.airlinemanagement.infrastructure.repository.AirportRepository;
 import org.example.airlinemanagement.infrastructure.repository.FlightRepository;
+import org.example.airlinemanagement.shared.Money;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,12 +26,20 @@ public class FlightService {
 
     @Transactional
     public FlightDto createFlight(CreateFlightCommand createFlightCommand) {
-        Airport airportFrom = airportRepository.findById(createFlightCommand.getAirportFromId()).orElseThrow();
-        Airport airportTo = airportRepository.findById(createFlightCommand.getAirportToId()).orElseThrow();
-        Flight flight = Flight.create(createFlightCommand.getFlightNo(), airportFrom, airportTo, createFlightCommand.getDateTime());
+        Airport airportFrom = airportRepository.findById(createFlightCommand.getAirportFromId())
+                .orElseThrow(() -> new EntityNotFoundException("Airport " + createFlightCommand.getAirportFromId()));
+        Airport airportTo = airportRepository.findById(createFlightCommand.getAirportToId())
+                .orElseThrow(() -> new EntityNotFoundException("Airport " + createFlightCommand.getAirportToId()));
+        Flight flight = Flight.create(
+                createFlightCommand.getFlightNo(),
+                airportFrom,
+                airportTo,
+                createFlightCommand.getDepartureTime(),
+                createFlightCommand.getArrivalTime(),
+                createFlightCommand.getTotalSeats(),
+                new Money(createFlightCommand.getPrice()));
         return flightMapper.toDto(flightRepository.save(flight));
     }
-
     @Transactional(readOnly = true)
     public List<FlightDto> getAllFlights() {
         return flightRepository.findAll()
@@ -46,7 +56,7 @@ public class FlightService {
         Airport airportTo = airportRepository.findById(airportToId).orElseThrow();
 
         {
-            return flightRepository.findByAirportFromAndAirportToAndDateTimeBetween(airportFrom, airportTo, fromDate, toDate)
+            return flightRepository.findByAirportFromAndAirportToAndDepartureTimeBetween(airportFrom, airportTo, fromDate, toDate)
                     .stream()
                     .map(flightMapper::toDto)
                     .toList();

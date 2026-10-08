@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface FlightRepository extends JpaRepository<Flight, Integer> {
 
-    List<Flight> findByAirportFromAndAirportToAndDateTimeBetween(
+    List<Flight> findByAirportFromAndAirportToAndDepartureTimeBetween(
             Airport airportFrom, Airport airportTo, ZonedDateTime from, ZonedDateTime to);
 }

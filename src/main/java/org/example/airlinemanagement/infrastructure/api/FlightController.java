@@ -3,7 +3,7 @@ package org.example.airlinemanagement.infrastructure.api;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.airlinemanagement.application.FlightService;
-import org.example.airlinemanagement.application.commands.CreateFlightCommand;
+import org.example.airlinemanagement.application.commands.create.CreateFlightCommand;
 import org.example.airlinemanagement.infrastructure.mapper.FlightDto;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -28,7 +28,7 @@ public class FlightController {
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.FOUND)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<List<FlightDto>> getAllFlights() {
         return ResponseEntity.status(HttpStatus.CREATED).body(flightService.getAllFlights());
 
@@ -36,14 +36,14 @@ public class FlightController {
     }
 
     @GetMapping("/search")
-    @ResponseStatus(HttpStatus.FOUND)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<List<FlightDto>> getFlightsForPerticularAirportAndDates(
             @RequestParam int airportFromId,
             @RequestParam int airportToId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime fromDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime toDate) {
         {
-            return ResponseEntity.status(HttpStatus.CREATED).body(flightService.getFlightsForPerticularAirportAndDates(airportFromId,
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(flightService.getFlightsForPerticularAirportAndDates(airportFromId,
                     airportToId,
                     fromDate
                     , toDate));

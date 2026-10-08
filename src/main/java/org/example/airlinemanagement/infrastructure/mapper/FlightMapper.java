@@ -12,7 +12,8 @@ public class FlightMapper {
                 flight.getFlightNo(),
                 flight.getAirportFrom().getId(),
                 flight.getAirportTo().getId(),
-                flight.getDateTime()
+                flight.getDepartureTime(),
+                flight.getArrivalTime()
         );
     }
 }

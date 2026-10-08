@@ -1,4 +1,4 @@
-package org.example.airlinemanagement.application.commands;
+package org.example.airlinemanagement.application.commands.create;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

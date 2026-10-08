@@ -1,18 +1,19 @@
 package org.example.airlinemanagement.infrastructure.mapper;
 
+import lombok.RequiredArgsConstructor;
 import org.example.airlinemanagement.domain.Booking;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class BookingMapper {
 
-    public BookingDto toDto(Booking booking) {
-        return new BookingDto(
-                booking.getId(),
-                booking.getFlight().getId(),
-                booking.getAirport().getId(),
-                booking.getPassenger().getId(),
-                booking.getBookingStatus().toString()
-        );
+    private final PassengerMapper passengerMapper;
+
+    public BookingDto toDto(Booking b) {
+        return new BookingDto(b.getId(), b.getFlight().getId(), b.getFlight().getFlightNo(),
+                b.getBookingStatus().name(), b.getCreatedAt(), b.getExpiresAt(),
+                b.getTotalPrice().amount(),
+                b.getPassengers().stream().map(passengerMapper::toDto).toList());
     }
 }

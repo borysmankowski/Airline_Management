@@ -3,7 +3,7 @@ package org.example.airlinemanagement.infrastructure.api;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.airlinemanagement.application.BookingService;
-import org.example.airlinemanagement.application.commands.CreateBookingCommand;
+import org.example.airlinemanagement.application.commands.create.CreateBookingCommand;
 import org.example.airlinemanagement.infrastructure.mapper.BookingDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,9 +27,9 @@ public class BookingController {
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.FOUND)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<List<BookingDto>> getAllAirports() {
-        return ResponseEntity.status(HttpStatus.CREATED).body(bookingService.getAllBookings());
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(bookingService.getAllBookings());
     }
 
 }
