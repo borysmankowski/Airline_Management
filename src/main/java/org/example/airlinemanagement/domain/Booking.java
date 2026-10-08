@@ -3,6 +3,12 @@ package org.example.airlinemanagement.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.airlinemanagement.shared.Money;
+
+import java.time.Duration;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -10,32 +16,52 @@ import lombok.NoArgsConstructor;
 public class Booking {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "flight_id")
     private Flight flight;
 
-    @ManyToOne
-    @JoinColumn(name = "airport_id")
-    private Airport airport;
-
-    @ManyToOne
-    @JoinColumn(name = "passenger_id")
-    private Passenger passenger;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 16)
     private BookingStatus bookingStatus;
 
-    private Booking(Flight flight, Airport airport, Passenger passenger, BookingStatus bookingStatus) {
-        this.flight = flight;
-        this.airport = airport;
-        this.passenger = passenger;
-        this.bookingStatus = bookingStatus;
-    }
+    @Column(nullable = false)
+    private ZonedDateTime createdAt;
 
-    public static Booking create(Flight flight, Airport airport, Passenger passenger, BookingStatus bookingStatus) {
-        return new Booking(flight, airport, passenger, bookingStatus);
+    @Column(nullable = false)
+    private ZonedDateTime expiresAt;
+
+    @Embedded
+    @AttributeOverride(name = "amount", column = @Column(name = "total_price", nullable = false, precision = 10, scale = 2))
+    private Money totalPrice;
+
+    @ManyToMany
+    @JoinTable(name = "booking_passengers",
+            joinColumns = @JoinColumn(name = "booking_id"),
+            inverseJoinColumns = @JoinColumn(name = "passenger_id"))
+    private List<Passenger> passengers = new ArrayList<>();
+
+    public static Booking create(Flight flight, User user, List<Passenger> passengers,
+                                 ZonedDateTime now, Duration timeout) {
+        if (passengers == null || passengers.isEmpty()) {
+            throw new ValidationException("Booking needs at least one passenger");
+        }
+        flight.reserveSeats(passengers.size());
+
+        Booking booking = new Booking();
+        booking.flight = flight;
+        booking.user = user;
+        booking.bookingStatus = BookingStatus.IN_PROGRESS;
+        booking.createdAt = now;
+        booking.expiresAt = now.plus(timeout);
+        booking.totalPrice = flight.getPrice().multiply(passengers.size());
+        booking.passengers.addAll(passengers);
+        return booking;
     }
 }

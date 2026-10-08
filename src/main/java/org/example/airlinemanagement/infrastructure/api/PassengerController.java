@@ -3,7 +3,7 @@ package org.example.airlinemanagement.infrastructure.api;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.airlinemanagement.application.PassengerService;
-import org.example.airlinemanagement.application.commands.CreatePassengerCommand;
+import org.example.airlinemanagement.application.commands.create.CreatePassengerCommand;
 import org.example.airlinemanagement.infrastructure.mapper.PassengerDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +26,7 @@ public class PassengerController {
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.FOUND)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<List<PassengerDto>> getAllPassengers() {
         return ResponseEntity.status(HttpStatus.CREATED).body(passengerService.getAllPassengers());
     }

@@ -3,7 +3,7 @@ package org.example.airlinemanagement.infrastructure.api;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.airlinemanagement.application.AirportService;
-import org.example.airlinemanagement.application.commands.CreateAirportCommand;
+import org.example.airlinemanagement.application.commands.create.CreateAirportCommand;
 import org.example.airlinemanagement.infrastructure.mapper.AirportDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +26,8 @@ public class AirportController {
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.FOUND)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<List<AirportDto>> getAllAirports() {
-        return ResponseEntity.status(HttpStatus.CREATED).body(airportService.getAllAirports());
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(airportService.getAllAirports());
     }
 }

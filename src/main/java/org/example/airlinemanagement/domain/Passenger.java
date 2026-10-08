@@ -3,7 +3,7 @@ package org.example.airlinemanagement.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.airlinemanagement.application.commands.CreatePassengerCommand;
+import org.example.airlinemanagement.application.commands.create.CreatePassengerCommand;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,15 +15,14 @@ import java.util.List;
 public class Passenger {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
     private String surname;
     @Column(unique = true)
     private String email;
     private LocalDate birthDate;
-    @Getter
-    @OneToMany(mappedBy = "passenger")
+    @ManyToMany(mappedBy = "passengers")
     private List<Booking> bookings;
 
     public Passenger(String name, String surname, String email, LocalDate birthDate) {

@@ -2,39 +2,58 @@ package org.example.airlinemanagement.application;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.example.airlinemanagement.application.commands.CreateBookingCommand;
+import org.example.airlinemanagement.application.commands.create.CreateBookingCommand;
+import org.example.airlinemanagement.application.commands.create.CreatePassengerCommand;
 import org.example.airlinemanagement.domain.*;
 import org.example.airlinemanagement.infrastructure.mapper.BookingDto;
 import org.example.airlinemanagement.infrastructure.mapper.BookingMapper;
-import org.example.airlinemanagement.infrastructure.repository.AirportRepository;
-import org.example.airlinemanagement.infrastructure.repository.BookingRepository;
-import org.example.airlinemanagement.infrastructure.repository.FlightRepository;
-import org.example.airlinemanagement.infrastructure.repository.PassengerRepository;
+import org.example.airlinemanagement.infrastructure.repository.*;
+import org.example.airlinemanagement.security.Caller;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
+import java.time.ZonedDateTime;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class BookingService {
 
-    private final FlightRepository flightRepository;
-    private final AirportRepository airportRepository;
-    private final PassengerRepository passengerRepository;
     private final BookingRepository bookingRepository;
+    private final FlightRepository flightRepository;
+    private final UserRepository userRepository;
     private final BookingMapper bookingMapper;
+    private final BookingProperties properties;
+    private final PassengerRepository passengerRepository;
+    private final Clock clock;
 
     @Transactional
     public BookingDto createBooking(CreateBookingCommand createBookingCommand) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User " + email));
         Flight flight = flightRepository.findById(createBookingCommand.getFlightId())
                 .orElseThrow(() -> new EntityNotFoundException("Flight " + createBookingCommand.getFlightId()));
-        Airport airport = airportRepository.findById(createBookingCommand.getAirportId())
-                .orElseThrow(() -> new EntityNotFoundException("Airport " + createBookingCommand.getAirportId()));
-        Passenger passenger = passengerRepository.findById(createBookingCommand.getPassengerId())
-                .orElseThrow(() -> new EntityNotFoundException("Passenger " + createBookingCommand.getPassengerId()));
 
-        return bookingMapper.toDto(bookingRepository.save(Booking.create(flight, airport, passenger, BookingStatus.IN_PROGRESS)));
+        ZonedDateTime now = ZonedDateTime.now(clock);
+        if (flight.hasDeparted(now)) {
+            throw new ConflictException("Flight has already departed");
+        }
+
+        List<CreatePassengerCommand> passengerCommands = createBookingCommand.getPassengers();
+        if (passengerCommands.stream().map(CreatePassengerCommand::getEmail).distinct().count() != passengerCommands.size()) {
+            throw new ValidationException("The same passenger cannot be added twice");
+        }
+        List<Passenger> passengers = passengerCommands.stream()
+                .map(p -> passengerRepository.findByEmail(p.getEmail())
+                        .orElseGet(() -> passengerRepository.save(Passenger.create(p))))
+                .toList();
+
+        Booking booking = Booking.create(flight, user, passengers, now, properties.timeout());
+        return bookingMapper.toDto(bookingRepository.save(booking));
     }
 
     @Transactional(readOnly = true)
