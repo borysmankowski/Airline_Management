@@ -3,6 +3,7 @@ package org.example.airlinemanagement.application;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.example.airlinemanagement.application.commands.create.CreateFlightCommand;
+import org.example.airlinemanagement.application.commands.update.UpdateFlightCommand;
 import org.example.airlinemanagement.domain.Airport;
 import org.example.airlinemanagement.domain.Flight;
 import org.example.airlinemanagement.infrastructure.mapper.FlightDto;
@@ -62,6 +63,29 @@ public class FlightService {
                     .map(flightMapper::toDto)
                     .toList();
         }
+    }
+
+    @Transactional
+    public FlightDto updateFlight (int id, UpdateFlightCommand updateFlightCommand){
+        Flight flight = flightRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Flight of id: " + id + "was not found"));
+
+        Airport airportFrom = airportRepository.findById(updateFlightCommand.getAirportFromId())
+                .orElseThrow(() -> new EntityNotFoundException("Airport from of id: " + updateFlightCommand.getAirportFromId() + "was not found"));
+
+        Airport airportTo = airportRepository.findById(updateFlightCommand.getAirportToId())
+                .orElseThrow(() -> new EntityNotFoundException("Airport from of id: " + updateFlightCommand.getAirportToId() + "was not found"));
+
+        flight.update(
+                updateFlightCommand.getFlightNo(),
+                airportFrom,
+                airportTo,
+                updateFlightCommand.getDepartureTime(),
+                updateFlightCommand.getArrivalTime(),
+                updateFlightCommand.getTotalSeats(),
+                new Money(updateFlightCommand.getPrice()));
+
+        return flightMapper.toDto(flight);
     }
 
     @Transactional
