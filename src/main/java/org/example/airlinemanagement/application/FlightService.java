@@ -63,4 +63,12 @@ public class FlightService {
                     .toList();
         }
     }
+
+    @Transactional
+    public void deleteFlightById(int id) {
+        if (!flightRepository.existsById(id)) {
+            throw new EntityNotFoundException("Flight with id: " + id + " was not found!");
+        }
+        flightRepository.deleteById(id);
+    }
 }
