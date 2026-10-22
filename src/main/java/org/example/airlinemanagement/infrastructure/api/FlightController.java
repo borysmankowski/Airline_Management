@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.airlinemanagement.application.FlightService;
 import org.example.airlinemanagement.application.commands.create.CreateFlightCommand;
+import org.example.airlinemanagement.application.commands.update.UpdateFlightCommand;
 import org.example.airlinemanagement.infrastructure.mapper.FlightDto;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -11,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,9 +62,17 @@ public class FlightController {
         }
     }
 
-    @DeleteMapping()
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<FlightDto> updateFlight (@PathVariable int id, @RequestBody @Valid UpdateFlightCommand updateFlightCommand){
+        return ResponseEntity.ok(flightService.updateFlight(id, updateFlightCommand));
+    }
+
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteFlightById(int id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteFlightById(@PathVariable int id) {
         flightService.deleteFlightById(id);
     }
 }
