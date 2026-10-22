@@ -30,20 +30,17 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) {
         http
-                .csrf(AbstractHttpConfigurer::disable)   // API stateless, bez cookies sesyjnych
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // publiczne
                         .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/refresh",
                                 "/api/auth/logout", "/api/users").permitAll()
-//                        .requestMatchers(HttpMethod.GET, "/api/flights/**", "/api/airports/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/flights/**", "/api/airports/**", "/register.html").permitAll()
-                        // tylko ADMIN
-                        .requestMatchers(HttpMethod.POST, "/api/flights/**", "/api/airports/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/flights/**", "/api/airports/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/flights/**", "/api/airports/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "/api/users/*/role").hasRole("ADMIN")
+
+//                        // tylko ADMIN
+                        .requestMatchers(HttpMethod.POST, "/api/flight/**", "/api/airport/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/flight/**", "/api/airport/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(o -> o.jwt(j -> j.jwtAuthenticationConverter(jwtAuthenticationConverter())));
         return http.build();
