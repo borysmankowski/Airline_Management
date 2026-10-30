@@ -66,7 +66,7 @@ public class FlightService {
     }
 
     @Transactional
-    public FlightDto updateFlight (int id, UpdateFlightCommand updateFlightCommand){
+    public FlightDto updateFlight(int id, UpdateFlightCommand updateFlightCommand) {
         Flight flight = flightRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Flight of id: " + id + "was not found"));
 

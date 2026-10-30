@@ -19,29 +19,22 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 public class User {
 
+    @Column(nullable = false)
+    private final boolean enabled = true;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     @Column(nullable = false, unique = true)
     private String email;
-
     @Column(nullable = false)
     private String passwordHash;
-
     @Column(nullable = false)
     private String name;
-
     @Column(nullable = false)
     private String surname;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 16)
     private Role role;
-
-    @Column(nullable = false)
-    private final boolean enabled = true;
-
     @Column(nullable = false)
     private ZonedDateTime createdAt;
 
