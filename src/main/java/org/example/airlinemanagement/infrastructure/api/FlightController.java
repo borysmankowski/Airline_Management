@@ -65,7 +65,7 @@ public class FlightController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<FlightDto> updateFlight (@PathVariable int id, @RequestBody @Valid UpdateFlightCommand updateFlightCommand){
+    public ResponseEntity<FlightDto> updateFlight(@PathVariable int id, @RequestBody @Valid UpdateFlightCommand updateFlightCommand) {
         return ResponseEntity.ok(flightService.updateFlight(id, updateFlightCommand));
     }
 

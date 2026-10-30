@@ -55,13 +55,16 @@ public class Booking {
     @AttributeOverride(name = "amount", column = @Column(name = "total_price", nullable = false, precision = 10, scale = 2))
     private Money totalPrice;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private BookingStatus status;
+
     @ManyToMany
     @JoinTable(name = "booking_passengers",
             joinColumns = @JoinColumn(name = "booking_id"),
             inverseJoinColumns = @JoinColumn(name = "passenger_id"))
-    private Set<Passenger> passengers = new HashSet<>(); // nie uzwac list w relacji zmien na set jak nie potrzeba kolejnosci to set
+    private Set<Passenger> passengers = new HashSet<>();
 
-    // a jak ma byc koljenosc to ma byc adnotacja OrderColumn i podac id aby zachowac kolejnosc
     public static Booking create(Flight flight, User user, List<Passenger> passengers,
                                  ZonedDateTime now, Duration timeout) {
         if (passengers == null || passengers.isEmpty()) {
@@ -78,5 +81,19 @@ public class Booking {
         booking.totalPrice = flight.getPrice().multiply(passengers.size());
         booking.passengers.addAll(passengers);
         return booking;
+    }
+
+    public void confirm(ZonedDateTime now) {
+        if (status == BookingStatus.CONFIRMED) {
+            return;
+        }
+        if (status == BookingStatus.CANCELLED || !now.isBefore(expiresAt)) {
+            throw new ConflictException("Booking has expired or was cancelled");
+        }
+        status = BookingStatus.CONFIRMED;
+    }
+
+    public void cancel() {
+        status = BookingStatus.CANCELLED;
     }
 }
