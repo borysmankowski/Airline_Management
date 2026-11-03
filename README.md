@@ -1,36 +1,36 @@
 # Airline Management
 
-Backend systemu do rezerwacji biletów lotniczych, robiony etapami jako projekt do nauki.
+Backend for a flight ticket booking system, built step by step as a learning project.
 
 Stack: Java, Spring Boot, Spring Security (JWT), Maven, TODO: Postgres/MySQL, TODO: Flyway/Liquibase
 
-## Co potrafi
+## What it does
 
-- CRUD dla lotnisk, lotów i rezerwacji
-- Szukanie lotów po lotnisku wylotu, przylotu i dacie (na razie tylko loty bezpośrednie)
-- Jedna rezerwacja może obejmować kilku pasażerów
-- Miejsca są blokowane na czas rezerwacji, więc dwie osoby nie kupią tych samych
-- Logowanie przez JWT, z access i refresh tokenem
-- Role: ADMIN i NORMAL
+- CRUD for airports, flights and reservations
+- Flight search by departure airport, arrival airport and date (direct flights only for now)
+- One reservation can include multiple passengers
+- Seats are blocked for the duration of a reservation, so two people can't book the same ones
+- JWT login with access and refresh tokens
+- Roles: ADMIN and NORMAL
 
-## Statusy rezerwacji
+## Reservation statuses
 
-Rezerwacja startuje jako IN_PROGRESS i potem może przejść do jednego z trzech stanów:
+A reservation starts as IN_PROGRESS and can then move to one of three states:
 
-- COMPLETED, po opłaceniu
-- CANCELLED, po anulowaniu
-- TIMED_OUT, jeśli nikt jej nie potwierdził w wyznaczonym czasie
+- COMPLETED, once it's paid for
+- CANCELLED, when it's cancelled
+- TIMED_OUT, if nobody confirmed it within the allowed time
 
-Płatność to na razie zwykły endpoint, docelowo ma być callbackiem od operatora płatności.
+Payment is just a plain endpoint for now, eventually it should become a callback from a payment provider.
 
-## Dostępy
+## Access
 
-- Bez tokena: login, refresh, zakładanie konta
-- Dodawanie, edycja i usuwanie lotów oraz lotnisk: tylko ADMIN
-- Wyszukiwanie lotów: każdy zalogowany
-- Rezerwacje: TODO opisać, kto widzi czyje
+- No token needed: login, refresh, account creation
+- Adding, editing and deleting flights and airports: ADMIN only
+- Flight search: any logged-in user
+- Reservations: TODO describe who can see whose
 
-## Jak odpalić
+## How to run
 
 ```bash
 git clone https://github.com/borysmankowski/Airline_Management.git
@@ -38,14 +38,14 @@ cd Airline_Management
 ./mvnw spring-boot:run
 ```
 
-Trzeba mieć postawioną bazę i wpisane dane do niej w application.properties. TODO: nazwa bazy i port.
+You need a running database and its connection details set in application.properties. TODO: database name and port.
 
-Testy:
+Tests:
 
 ```bash
 ./mvnw test
 ```
 
-## Plan
+## Roadmap
 
-Coming soon! 
+Coming soon!
