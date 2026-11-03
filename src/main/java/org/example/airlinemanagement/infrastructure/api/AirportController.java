@@ -3,19 +3,11 @@ package org.example.airlinemanagement.infrastructure.api;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.airlinemanagement.application.AirportService;
-import org.example.airlinemanagement.application.commands.create.CreateAirportCommand;
 import org.example.airlinemanagement.infrastructure.mapper.AirportDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,8 +21,8 @@ public class AirportController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<AirportDto> createAirport(@RequestBody @Valid CreateAirportCommand createAirportCommand) {
-        AirportDto createdAirport = airportService.createAirport(createAirportCommand);
+    public ResponseEntity<AirportDto> createAirport(@RequestBody @Valid CreateAirportRequest request) {
+        AirportDto createdAirport = airportService.createAirport(request.toCommand());
         return ResponseEntity.status(HttpStatus.CREATED).body(createdAirport);
     }
 
