@@ -4,10 +4,10 @@ import org.example.airlinemanagement.application.commands.create.CreatePassenger
 
 import java.time.LocalDate;
 
-public record CreatePassengerRequest (String name, String surname, String email, LocalDate birthdate) {
+public record CreatePassengerRequest(String name, String surname, String email, LocalDate birthdate) {
 
-    public CreatePassengerCommand toCommand (){
-        return new CreatePassengerCommand(name,surname,email,birthdate);
+    public CreatePassengerCommand toCommand() {
+        return new CreatePassengerCommand(name, surname, email, birthdate);
     }
 
 }

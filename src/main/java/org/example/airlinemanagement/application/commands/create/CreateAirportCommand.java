@@ -3,9 +3,11 @@ package org.example.airlinemanagement.application.commands.create;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class CreateAirportCommand {
 
     @Pattern(regexp = "^[A-Za-z]{4}$", message = "ICAO code must be 4 letters")
