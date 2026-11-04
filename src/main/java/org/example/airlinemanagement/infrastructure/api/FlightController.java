@@ -3,7 +3,6 @@ package org.example.airlinemanagement.infrastructure.api;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.airlinemanagement.application.FlightService;
-import org.example.airlinemanagement.application.commands.create.CreateFlightCommand;
 import org.example.airlinemanagement.application.commands.update.UpdateFlightCommand;
 import org.example.airlinemanagement.infrastructure.mapper.FlightDto;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,8 +24,8 @@ public class FlightController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<FlightDto> createFlight(@RequestBody @Valid CreateFlightCommand createFlightCommand) {
-        FlightDto createdFlight = flightService.createFlight(createFlightCommand);
+    public ResponseEntity<FlightDto> createFlight(@RequestBody @Valid CreateFlightRequest createFlightCommand) {
+        FlightDto createdFlight = flightService.createFlight(createFlightCommand.toCommand());
         return ResponseEntity.status(HttpStatus.CREATED).body(createdFlight);
     }
 

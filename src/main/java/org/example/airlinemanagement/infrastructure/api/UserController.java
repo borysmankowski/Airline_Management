@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.airlinemanagement.application.UserService;
 import org.example.airlinemanagement.application.commands.ChangeRoleCommand;
-import org.example.airlinemanagement.application.commands.create.CreateUserCommand;
 import org.example.airlinemanagement.application.commands.update.UpdateUserCommand;
 import org.example.airlinemanagement.infrastructure.mapper.UserDto;
 import org.example.airlinemanagement.security.Caller;
@@ -23,8 +22,8 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto createUser(@RequestBody @Valid CreateUserCommand command) {
-        return userService.createUser(command);
+    public UserDto createUser(@RequestBody @Valid CreateUserRequest command) {
+        return userService.createUser(command.toCommand());
     }
 
     @GetMapping("/me")

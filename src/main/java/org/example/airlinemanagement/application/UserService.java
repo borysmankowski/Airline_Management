@@ -29,9 +29,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final Clock clock;
 
-    /**
-     * Public registration - always role NORMAL.
-     */
+
     @Transactional
     public UserDto createUser(CreateUserCommand command) {
         return userMapper.toDto(createWithRole(command, Role.NORMAL));

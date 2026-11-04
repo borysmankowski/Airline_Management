@@ -27,11 +27,7 @@ class AdminInitializer implements ApplicationRunner {
         if (email.isBlank() || password.isBlank() || userRepository.existsByEmail(email.toLowerCase())) {
             return;
         }
-        CreateUserCommand command = new CreateUserCommand();
-        command.setEmail(email);
-        command.setPassword(password);
-        command.setName("Admin");
-        command.setSurname("Admin");
+        CreateUserCommand command = new CreateUserCommand(email, password, "Admin", "Admin");
         userService.createWithRole(command, Role.ADMIN);
     }
 }
