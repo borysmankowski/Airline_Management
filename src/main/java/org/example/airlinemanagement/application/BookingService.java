@@ -1,6 +1,5 @@
 package org.example.airlinemanagement.application;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.example.airlinemanagement.application.commands.create.CreateBookingCommand;
 import org.example.airlinemanagement.application.commands.create.CreatePassengerCommand;
@@ -11,7 +10,6 @@ import org.example.airlinemanagement.infrastructure.repository.BookingRepository
 import org.example.airlinemanagement.infrastructure.repository.FlightRepository;
 import org.example.airlinemanagement.infrastructure.repository.PassengerRepository;
 import org.example.airlinemanagement.infrastructure.repository.UserRepository;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,14 +31,10 @@ public class BookingService {
 
     @Transactional
     public BookingDto createBooking(CreateBookingCommand command) {
-        // TODO: 22/10/2026 przekazac do booking - ma powstac booking np na 15 min a pozniej jak potwierdzone to spoko a jak nie to cancelled
-        // ustawic cron na bookingi ktore sa juz expired i usunac - DONE
-        // sprawdzac w db ktore booking maja created time wiecej niz =>15 min i wtedy usuwac -DONE
-        // TODO: 29/10/2026 Przemapowac wszystkie commandy na requesty aby oddzielic warstwy
         User user = userRepository.findByEmail(command.getEmail())
-                .orElseThrow(() -> new EntityNotFoundException("User " + command));
+                .orElseThrow(() -> new NotFoundException("User " + command.getEmail()));
         Flight flight = flightRepository.findById(command.getFlightId())
-                .orElseThrow(() -> new EntityNotFoundException("Flight " + command.getFlightId()));
+                .orElseThrow(() -> new NotFoundException("Flight " + command.getFlightId()));
 
         ZonedDateTime now = ZonedDateTime.now(clock);
         if (flight.hasDeparted(now)) {
@@ -53,43 +47,53 @@ public class BookingService {
         }
         List<Passenger> passengers = passengerCommands.stream()
                 .map(p -> passengerRepository.findByEmail(p.getEmail())
-                        // TODO: 29/10/2026 zamokowac find by email do testu i dodac
                         .orElseGet(() -> passengerRepository.save(Passenger.create(p))))
                 .toList();
 
         Booking booking = Booking.create(flight, user, passengers, now, bookingProperties.timeout());
-        return bookingMapper.toDto(bookingRepository.save(booking)); // znalezc jakos booking czy zostal dodany do bazy danych
-        // asertThat
+        return bookingMapper.toDto(bookingRepository.save(booking));
     }
 
     @Transactional(readOnly = true)
-    public List<BookingDto> getAllBookings() {
-        return bookingRepository.findAll()
+    public List<BookingDto> getMyBookings(String email) {
+        return bookingRepository.findByUserEmail(email)
                 .stream()
                 .map(bookingMapper::toDto)
                 .toList();
     }
 
     @Transactional
-    public BookingDto confirmBooking(int bookingId) {
-        Booking booking = findOwnedBooking(bookingId);
-        booking.confirm(ZonedDateTime.now(clock));
+    public BookingDto completeBooking(int bookingId, String email) {
+        Booking booking = findOwnedBooking(bookingId, email);
+        booking.complete(ZonedDateTime.now(clock));
         return bookingMapper.toDto(booking);
     }
 
     @Transactional
-    public BookingDto cancelBooking(int bookingId) {
-        Booking booking = findOwnedBooking(bookingId);
+    public BookingDto cancelBooking(int bookingId, String email) {
+        Booking booking = findOwnedBooking(bookingId, email);
         booking.cancel();
         return bookingMapper.toDto(booking);
     }
 
-    private Booking findOwnedBooking(int bookingId) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    @Transactional
+    public int timeOutExpiredBookings() {
+        ZonedDateTime now = ZonedDateTime.now(clock);
+        int timedOut = 0;
+        for (Booking booking : bookingRepository
+                .findByStatusAndExpiresAtLessThanEqual(BookingStatus.IN_PROGRESS, now)) {
+            if (booking.timeOut(now)) {
+                timedOut++;
+            }
+        }
+        return timedOut;
+    }
+
+    private Booking findOwnedBooking(int bookingId, String email) {
         Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new EntityNotFoundException("Booking " + bookingId));
+                .orElseThrow(() -> new NotFoundException("Booking " + bookingId));
         if (!booking.getUser().getEmail().equals(email)) {
-            throw new EntityNotFoundException("Booking " + bookingId);
+            throw new NotFoundException("Booking " + bookingId); // 404, so we don't reveal other users' bookings
         }
         return booking;
     }

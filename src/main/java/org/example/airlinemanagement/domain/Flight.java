@@ -109,4 +109,12 @@ public class Flight {
     public boolean hasDeparted(ZonedDateTime now) {
         return !departureTime.isAfter(now);
     }
+
+    public void releaseSeats(int count) {
+        if (count <= 0) throw new ValidationException("Seat count must be positive");
+        if (availableSeats + count > totalSeats) {
+            throw new ConflictException("Cannot release more seats than were booked");
+        }
+        availableSeats += count;
+    }
 }
