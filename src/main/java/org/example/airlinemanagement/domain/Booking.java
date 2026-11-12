@@ -28,10 +28,6 @@ public class Booking {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 16)
-    private BookingStatus bookingStatus;
-
     @Column(nullable = false)
     private ZonedDateTime createdAt;
 
@@ -62,7 +58,7 @@ public class Booking {
         Booking booking = new Booking();
         booking.flight = flight;
         booking.user = user;
-        booking.bookingStatus = BookingStatus.IN_PROGRESS;
+        booking.status = BookingStatus.IN_PROGRESS;
         booking.createdAt = now;
         booking.expiresAt = now.plus(timeout);
         booking.totalPrice = flight.getPrice().multiply(passengers.size());
@@ -70,17 +66,34 @@ public class Booking {
         return booking;
     }
 
-    public void confirm(ZonedDateTime now) {
-        if (status == BookingStatus.CONFIRMED) {
-            return;
-        }
-        if (status == BookingStatus.CANCELLED || !now.isBefore(expiresAt)) {
-            throw new ConflictException("Booking has expired or was cancelled");
-        }
-        status = BookingStatus.CONFIRMED;
+    public boolean isExpired(ZonedDateTime now) {
+        return !now.isBefore(expiresAt);
+    }
+
+    public void complete(ZonedDateTime now) {
+        if (status == BookingStatus.COMPLETED) return;
+        if (status != BookingStatus.IN_PROGRESS)
+            throw new ConflictException("Booking cannot be completed from status " + status);
+        if (isExpired(now)) throw new BookingExpiredException();
+        status = BookingStatus.COMPLETED;
     }
 
     public void cancel() {
+        if (status == BookingStatus.CANCELLED) return;
+        if (status == BookingStatus.TIMED_OUT)
+            throw new ConflictException("Timed out booking cannot be cancelled");
         status = BookingStatus.CANCELLED;
+        flight.releaseSeats(passengers.size());
     }
+
+    public boolean timeOut(ZonedDateTime now) {
+        if (status != BookingStatus.IN_PROGRESS || !isExpired(now))
+            return false;
+
+        status = BookingStatus.TIMED_OUT;
+        flight.releaseSeats(passengers.size());
+        return true;
+    }
+
+
 }

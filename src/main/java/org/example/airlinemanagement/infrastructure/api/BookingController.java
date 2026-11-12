@@ -19,28 +19,23 @@ public class BookingController {
     private final BookingService bookingService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<BookingDto> createBooking(@RequestBody @Valid CreateBookingRequest request, Authentication auth) {
-        String email = auth.getName();
-        BookingDto createdBooking = bookingService.createBooking(request.toCommand(email));
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdBooking);
-
+    public ResponseEntity<BookingDto> createBooking(@RequestBody @Valid CreateBookingRequest request) {
+        BookingDto created = bookingService.createBooking(request.toCommand());
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<List<BookingDto>> getAllAirports() {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(bookingService.getAllBookings());
+    public List<BookingDto> getMyBookings(Authentication auth) {
+        return bookingService.getMyBookings(auth.getName());
     }
 
-    @PostMapping("/{id}/confirm")
-    public BookingDto confirm(@PathVariable int id) {
-        return bookingService.confirmBooking(id);
+    @PostMapping("/{id}/complete")
+    public BookingDto complete(@PathVariable int id, Authentication auth) {
+        return bookingService.completeBooking(id, auth.getName());
     }
 
     @PostMapping("/{id}/cancel")
-    public BookingDto cancel(@PathVariable int id) {
-        return bookingService.cancelBooking(id);
+    public BookingDto cancel(@PathVariable int id, Authentication auth) {
+        return bookingService.cancelBooking(id, auth.getName());
     }
-
 }
