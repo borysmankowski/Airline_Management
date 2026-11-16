@@ -19,8 +19,8 @@ public class BookingController {
     private final BookingService bookingService;
 
     @PostMapping
-    public ResponseEntity<BookingDto> createBooking(@RequestBody @Valid CreateBookingRequest request) {
-        BookingDto created = bookingService.createBooking(request.toCommand());
+    public ResponseEntity<BookingDto> createBooking(@RequestBody @Valid CreateBookingRequest request, Authentication auth) {
+        BookingDto created = bookingService.createBooking(request.toCommand(auth.getName()) );
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 

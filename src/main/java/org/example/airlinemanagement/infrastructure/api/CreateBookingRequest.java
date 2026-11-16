@@ -22,7 +22,7 @@ public record CreateBookingRequest(
         String email
 ) {
 
-    public CreateBookingCommand toCommand() {
+    public CreateBookingCommand toCommand(String email) {
         return new CreateBookingCommand(flightId, passengers.stream()
                 .map(CreatePassengerRequest::toCommand).collect(Collectors.toList()), email);
     }
