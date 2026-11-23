@@ -1,10 +1,12 @@
 package org.example.airlinemanagement.application;
 
+import org.example.airlinemanagement.domain.Airport;
 import org.example.airlinemanagement.domain.Flight;
 import org.example.airlinemanagement.domain.Role;
 import org.example.airlinemanagement.domain.User;
 import org.example.airlinemanagement.infrastructure.repository.FlightRepository;
 import org.example.airlinemanagement.infrastructure.repository.UserRepository;
+import org.example.airlinemanagement.shared.IcaoCode;
 import org.example.airlinemanagement.shared.Money;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -32,7 +34,15 @@ class BookingServiceTest {
     void createBooking() {
 
         User user = User.create("email@gmail.com","asd", "Jarek", "Tusk", Role.ADMIN, ZonedDateTime.now());
-        Flight flight = Flight.create("LO12", null, null, ZonedDateTime.now().plusMinutes(5), ZonedDateTime.now().plusDays(1), 12, new Money(BigDecimal.valueOf(123)));
+
+        Airport from = Airport.register(new IcaoCode("EPPO"), "Poland", "Poznan");
+        Airport to = Airport.register(new IcaoCode("EPWA"), "Poland", "Warsaw");
+
+
+        Flight flight = Flight.create("LO12", from, to,
+                ZonedDateTime.now().plusMinutes(5), ZonedDateTime.now().plusDays(1),
+                12, new Money(BigDecimal.valueOf(123)));
+
 
         BDDMockito.given(userRepository.findByEmail(any()))
                 .willReturn(Optional.of(user));
